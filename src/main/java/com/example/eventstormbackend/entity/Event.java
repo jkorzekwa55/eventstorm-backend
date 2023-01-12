@@ -24,5 +24,8 @@ public class Event {
     private String city;
     private String venueName;
     private String venueAddress;
-
+    @OneToOne
+    private User owner;
+    @OneToMany(mappedBy = "event")
+    private Set<UserEvent> userEvents = new HashSet<>();
 }
