@@ -9,5 +9,6 @@ public class EventstormBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(EventstormBackendApplication.class, args);
     }
+    
 
 }
