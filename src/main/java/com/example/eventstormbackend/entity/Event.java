@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +25,16 @@ public class Event {
     private String city;
     private String venueName;
     private String venueAddress;
+    private String postalCode;
+    private LocalDateTime startDateTime;
     @OneToOne
     private User owner;
     @OneToMany(mappedBy = "event")
     private Set<UserEvent> userEvents = new HashSet<>();
+    @OneToMany
+    private Set<Image> images = new HashSet<>();
+
+    void addImage(Image image) {
+        images.add(image);
+    }
 }

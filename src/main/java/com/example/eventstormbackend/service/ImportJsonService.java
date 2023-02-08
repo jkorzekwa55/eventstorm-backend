@@ -3,6 +3,7 @@ package com.example.eventstormbackend.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.AllArgsConstructor;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ImportJsonService {
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -32,6 +34,7 @@ public class ImportJsonService {
     public void insertIntoCollection(String response) {
         JsonArray events = parseIntoJSON(response);
         List<Document> mongoDocs = generateMongoDocs(events);
+        mongoTemplate.dropCollection("events");
         if (!mongoTemplate.collectionExists("events")) {
             mongoTemplate.createCollection("events");
         }

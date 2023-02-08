@@ -1,5 +1,6 @@
-package com.example.eventstormbackend.service;
+package com.example.eventstormbackend.apiClient;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -10,10 +11,12 @@ import java.net.URL;
 
 @Service
 public class TicketmasterClientAPI {
-    private static final String URL = "https://app.ticketmaster.com/discovery/v2/events?apikey=7elxdku9GGG5k8j0Xm8KWdANDgecHMV0&locale=*";
+    private static final String URL = "https://app.ticketmaster.com/discovery/v2/events?apikey=";
+    @Value("${ticketmaster.apiKey}")
+    private String apiKey;
 
     public String getEvents() throws IOException {
-        URL obj = new URL(URL);
+        URL obj = new URL(URL + apiKey + "&locale=pl");
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
         int responseCode = con.getResponseCode();
