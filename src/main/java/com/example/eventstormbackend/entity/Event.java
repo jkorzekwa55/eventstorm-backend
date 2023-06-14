@@ -20,6 +20,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String description;
     @ManyToMany
     private Set<Category> category = new HashSet<>();
     private String city;
@@ -27,6 +28,7 @@ public class Event {
     private String venueAddress;
     private String postalCode;
     private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
     @OneToOne
     private User owner;
     @OneToMany(mappedBy = "event")

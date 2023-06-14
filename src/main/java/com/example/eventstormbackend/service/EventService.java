@@ -2,10 +2,12 @@ package com.example.eventstormbackend.service;
 
 import com.example.eventstormbackend.dto.EventDto;
 import com.example.eventstormbackend.dto.EventPostDto;
+import com.example.eventstormbackend.dto.EventWithDeclarationDto;
 import com.example.eventstormbackend.entity.Event;
 import com.example.eventstormbackend.entity.User;
 import com.example.eventstormbackend.model.Role;
 import com.example.eventstormbackend.repository.EventRepository;
+import com.example.eventstormbackend.repository.UserEventRepository;
 import com.example.eventstormbackend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class EventService {
     private EventRepository eventRepository;
     private UserRepository userRepository;
+    private UserEventRepository userEventRepository;
     private ModelMapper modelMapper;
 
     public void addEvent(Event event) {
@@ -56,5 +59,14 @@ public class EventService {
                 eventRepository.deleteById(id);
             }
         }
+    }
+
+    public List<EventWithDeclarationDto> getEventsWithDeclarations(Authentication authentication) {
+        Optional<User> user = userRepository.findByUsername(authentication.getName());
+        List<Event> allEvents = eventRepository.findAllEvents();
+        List<EventWithDeclarationDto> collect = allEvents.stream().map(o -> modelMapper.map(o, EventWithDeclarationDto.class)).toList();
+        collect.forEach(o -> userEventRepository.findByUserIdAndEventId(user.get().getId(), o.getId())
+                .ifPresent(userEvent -> o.setUserDeclaration(userEvent.getDeclarationType().toString())));
+        return collect;
     }
 }

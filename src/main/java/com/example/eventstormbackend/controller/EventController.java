@@ -2,6 +2,7 @@ package com.example.eventstormbackend.controller;
 
 import com.example.eventstormbackend.dto.EventDto;
 import com.example.eventstormbackend.dto.EventPostDto;
+import com.example.eventstormbackend.dto.EventWithDeclarationDto;
 import com.example.eventstormbackend.service.EventService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,12 +23,18 @@ public class EventController {
         return eventService.getEvents();
     }
 
+    @GetMapping("/extended")
+    public List<EventWithDeclarationDto> getEventsWithDeclarations(Authentication authentication) {
+        return eventService.getEventsWithDeclarations(authentication);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<EventDto> getEventById(@PathVariable Long id) {
         return eventService.getEventById(id)
                 .map(ResponseEntity::ok)
                 .orElse(null);
     }
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
