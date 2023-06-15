@@ -28,6 +28,14 @@ public class EventController {
         return eventService.getEventsWithDeclarations(authentication);
     }
 
+    @GetMapping("/extended/{id}")
+    public ResponseEntity<EventWithDeclarationDto> getEventsWithDeclarationById(
+            Authentication authentication, @PathVariable Long id) {
+        return eventService.getEventByIdWithDEclaration(authentication, id)
+                .map(ResponseEntity::ok)
+                .orElse(null);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<EventDto> getEventById(@PathVariable Long id) {
         return eventService.getEventById(id)

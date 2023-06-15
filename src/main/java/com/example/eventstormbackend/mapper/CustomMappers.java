@@ -34,6 +34,7 @@ public class CustomMappers {
         typeMap.addMappings(m -> m.map(src -> src.getOwner().getUsername(), EventWithDeclarationDto::setOwnerName));
         typeMap.addMapping(Event::getCity, EventWithDeclarationDto::setCity);
         typeMap.addMapping(Event::getVenueName, EventWithDeclarationDto::setVenueName);
+        typeMap.addMapping(Event::getStartDateTime, EventWithDeclarationDto::setStartDate);
         typeMap.addMapping(Event::getVenueAddress, EventWithDeclarationDto::setVenueAdress);
         typeMap.addMapping(Event::getStartDateTime, EventWithDeclarationDto::setStartDate);
     }

@@ -76,4 +76,20 @@ public class EventService {
 
 
     }
+
+    public Optional<EventWithDeclarationDto> getEventByIdWithDEclaration(Authentication authentication, Long id) {
+        Optional<User> user = userRepository.findByUsername(authentication.getName());
+        Optional<EventWithDeclarationDto> event = eventRepository.findById(id).map(x -> modelMapper.map(x, EventWithDeclarationDto.class));
+        if(authentication == null){
+            return event;
+        }else{
+            if(event.isPresent()){
+                userEventRepository.findByUserIdAndEventId(user.get().getId(), event.get().getId())
+                    .ifPresent(userEvent -> event.get().setUserDeclaration(userEvent.getDeclarationType().toString()));
+                return event;
+            }
+
+        }
+        return event;
+    }
 }
