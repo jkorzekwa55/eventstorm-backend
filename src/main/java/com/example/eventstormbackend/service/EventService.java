@@ -62,11 +62,18 @@ public class EventService {
     }
 
     public List<EventWithDeclarationDto> getEventsWithDeclarations(Authentication authentication) {
-        Optional<User> user = userRepository.findByUsername(authentication.getName());
-        List<Event> allEvents = eventRepository.findAllEvents();
-        List<EventWithDeclarationDto> collect = allEvents.stream().map(o -> modelMapper.map(o, EventWithDeclarationDto.class)).toList();
-        collect.forEach(o -> userEventRepository.findByUserIdAndEventId(user.get().getId(), o.getId())
-                .ifPresent(userEvent -> o.setUserDeclaration(userEvent.getDeclarationType().toString())));
-        return collect;
+        if(authentication == null){
+            List<Event> allEvents = eventRepository.findAllEvents();
+            return allEvents.stream().map(o -> modelMapper.map(o, EventWithDeclarationDto.class)).toList();
+        }else{
+            Optional<User> user = userRepository.findByUsername(authentication.getName());
+            List<Event> allEvents = eventRepository.findAllEvents();
+            List<EventWithDeclarationDto> collect = allEvents.stream().map(o -> modelMapper.map(o, EventWithDeclarationDto.class)).toList();
+            collect.forEach(o -> userEventRepository.findByUserIdAndEventId(user.get().getId(), o.getId())
+                    .ifPresent(userEvent -> o.setUserDeclaration(userEvent.getDeclarationType().toString())));
+            return collect;
+        }
+
+
     }
 }
