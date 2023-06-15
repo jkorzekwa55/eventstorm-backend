@@ -4,13 +4,20 @@ import com.example.eventstormbackend.apiClient.TicketmasterClientAPI;
 import com.example.eventstormbackend.entity.Event;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -45,12 +52,19 @@ public class ConnectionToMongoService {
                 String city = String.valueOf(venue.getAsJsonObject("city").get("name"));
                 String venueAddress = String.valueOf(venue.getAsJsonObject("address").get("line1"));
                 String postalCode = String.valueOf(venue.get("postalCode"));
-
+                String startDateTime = String.valueOf(eventJSON.getAsJsonObject("dates").getAsJsonObject("start").get("dateTime"));
                 Event event = new Event();
                 event.setName(name);
                 event.setCity(city);
                 event.setPostalCode(postalCode);
                 event.setVenueAddress(venueAddress);
+                System.out.println(startDateTime);
+                if(!Objects.equals(startDateTime, "null")){
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                    LocalDateTime dateTime = LocalDateTime.parse(startDateTime.substring(1, startDateTime.length() - 2), formatter);
+                    event.setStartDateTime(dateTime);
+                }
+
                 event.setVenueName(venueName);
 
                 eventService.addEvent(event);
